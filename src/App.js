@@ -35,6 +35,8 @@ const App: () => React$Node = () => {
       <Field mined />
       <Field opened mined />
       <Field opened mined exploded />
+      <Field flagged />
+      <Field flagged opened/>
     </View>
   );
 };
