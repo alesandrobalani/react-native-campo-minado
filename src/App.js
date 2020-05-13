@@ -6,53 +6,57 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View,
   Text,
 } from 'react-native';
 import params from './params'
-import Field from './components/Field'
+import MineField from './components/MineField'
+import { createMinedBoard } from './functions'
 
-const App: () => React$Node = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.welcome}>Iniciando Mines...</Text>
-      <Text style={styles.instructions}>Tamanho da grade:
+export default class App extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = this.createState()
+  }
+
+  minesAmount = () => {
+    const columnsAmount = params.getColumnsAmount()
+    const rowsAmount = params.getRowsAmount()
+    return Math.ceil(columnsAmount * rowsAmount * params.dificultLevel)
+  }
+
+  createState = () => {
+    const columnsAmount = params.getColumnsAmount()
+    const rowsAmount = params.getRowsAmount()
+    return {
+      board: createMinedBoard(rowsAmount, columnsAmount, this.minesAmount())
+    }
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Iniciando Mines...</Text>
+        <Text>Tamanho da grade:
         {params.getColumnsAmount()}x{params.getRowsAmount()}
-      </Text>
-      <Field />
-      <Field opened />
-      <Field opened nearMines={1} />
-      <Field opened nearMines={2} />
-      <Field opened nearMines={3} />
-      <Field opened nearMines={4} />
-      <Field opened nearMines={5} />
-      <Field opened nearMines={6} />
-      <Field opened nearMines={7} />
-      <Field opened nearMines={8} />
-      <Field mined />
-      <Field opened mined />
-      <Field opened mined exploded />
-      <Field flagged />
-      <Field flagged opened/>
-    </View>
-  );
+        </Text>
+        <MineField style={styles.board} board={this.state.board} />
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  board: {
+    backgroundColor: '#AAA'
   },
 });
-
-export default App;
